@@ -1,16 +1,20 @@
-
+//header.js
 import { Link, NavLink } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { authActions } from "../Store/auth";
 import "../../App.css";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 const Header = () => {
   const islogin = useSelector((state) => state.auth.isAuthenticated);
   const dispatch = useDispatch();
+  const count= useSelector((state)=>state.auth.count);
+  const navigate= useNavigate();
 
   const logoutHandler = () => {
     dispatch(authActions.logout());
+    navigate('/');
     toast.error("logged out");
   };
 
@@ -39,21 +43,21 @@ const Header = () => {
                 <span class="visually-hidden">(current)</span>
               </NavLink>
             </li>
-            <li class="nav-item">
+            {islogin &&<li class="nav-item">
               <NavLink className="nav-link" to="/compose">
                 Compose Mail
               </NavLink>
-            </li>
-            <li class="nav-item">
+            </li>}
+            {islogin &&<li class="nav-item">
               <NavLink className="nav-link" to="/inbox">
-                Inbox
+                Inbox ({count})
               </NavLink>
-            </li>
-            <li class="nav-item">
+            </li>}
+            {islogin && <li class="nav-item">
               <NavLink className="nav-link" to="/sentbox">
                 SentBox
               </NavLink>
-            </li>
+            </li>}
 
             <li className="nav-item">
               {!islogin && (
@@ -77,11 +81,7 @@ const Header = () => {
                 </button>
               )}
             </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">
-                About
-              </a>
-            </li>
+
           </ul>
         </div>
       </div>

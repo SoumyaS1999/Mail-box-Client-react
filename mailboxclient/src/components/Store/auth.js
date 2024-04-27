@@ -1,13 +1,16 @@
 
 import { createSlice } from "@reduxjs/toolkit";
 
+
 const initialToken = localStorage.getItem("token");
 const initialUuid = localStorage.getItem("uuid");
+
 
 const initialAuthState = {
   isAuthenticated: initialToken ? true : false,
   token: initialToken || null,
   useruuid: initialUuid || null,
+  count:0,
 };
 
 const authSlice = createSlice({
@@ -31,6 +34,9 @@ const authSlice = createSlice({
       state.useruuid = null;
       //alert("You are logged out");
     },
+    setCount(state,action){
+      state.count= action.payload;
+    }
   },
 });
 

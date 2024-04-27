@@ -87,10 +87,10 @@ const Signup = () => {
             ref={passwordRef}
           />
         </div>
-        <button type="submit" onClick={signupHandler} class="btn btn-primary">
+        <button type="submit" style={{marginTop:"15px", marginRight:"10px"}}onClick={signupHandler} class="btn btn-outline-primary">
           Submit
         </button>
-        <button type="submit" onClick={loginHandler} class="btn btn-primary">
+        <button type="submit"  style={{marginTop:"15px", marginLeft:"10px"}}onClick={loginHandler} class="btn btn-outline-info">
           Existing User Login
         </button>
       </fieldset>

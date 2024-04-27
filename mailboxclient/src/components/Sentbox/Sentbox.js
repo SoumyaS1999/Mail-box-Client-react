@@ -1,9 +1,12 @@
-
+//import { EditorState, convertFromRaw } from "draft-js";
 import { useState, useEffect } from "react";
+import { toast } from "react-toastify";
+
 const Sentbox = () => {
   const [inboxmail, setInboxmail] = useState([]);
   const currentuser = localStorage.getItem("uuid");
   const [idmail, setIdmail] = useState([]);
+  const [showAlert, setShowAlert] = useState(false);
   const encodeEmail = (email) => {
     if (!email) {
       return "";
@@ -68,10 +71,35 @@ const Sentbox = () => {
       console.log(err);
     }
   };
+  const handleButtonClick = () => {
+    setShowAlert(true);
+  };
+
+  const handleButtonClose = () => {
+    setShowAlert(false);
+  };
 
   useEffect(() => {
     fetchmails();
   }, []);
+
+  const DeleteHandler=async(id)=>{
+    const response = await fetch(
+      `https://mail-box-client-e1fde-default-rtdb.firebaseio.com/users/${encodedCurrentUser}/sent/${id}.json`,
+      {
+        method: "DELETE",
+      }
+    );
+    if (response.ok) {
+      toast.warning("Item is deleted");
+      fetchmails();
+      //return { payload: id };
+    } else {
+      toast.error("Failed to delete item");
+      //return { payload: null };
+  }
+}
+
 
   return (
     <div>
@@ -80,8 +108,8 @@ const Sentbox = () => {
         <div>
           <ul>
             {inboxmail.map((mail) => (
-              <li key={mail.id}>
-                <button onClick={() => fetchMailById(mail.id)}>
+              <li key={mail.id} style={{listStyle:"none"}}>
+                <button  type="button" class="btn btn-outline-primary" style={{ minWidth:"270px", borderRadius:"0%"}} onClick={() => {fetchMailById(mail.id); handleButtonClick() }}>
                   <strong>From:</strong> {mail.sender}
                   <br />
                   <strong>To:</strong> {mail.receiver}
@@ -95,24 +123,29 @@ const Sentbox = () => {
             ))}
           </ul>
         </div>
-        <div style={{ minWidth: "600px" }}>
+        {showAlert && <div class="alert alert-dismissible alert-light" style={{marginLeft:"20px" ,minWidth: "70%"}}>
           <ul>
             {idmail.map((mail) => (
-              <li key={mail.id}>
+              <li key={mail.id} style={{listStyle:"none"}}>
                 <strong>From:</strong> {mail.sender}
                 <br />
                 <strong>To:</strong> {mail.receiver}
                 <br />
                 <strong>Subject:</strong> {mail.subject}
                 <br />
-                <strong>Body:</strong> {mail.body}
+                <strong>Body:</strong>
+                {mail.body}
                 <br />
                 <strong>Time:</strong> {new Date(mail.time).toLocaleString()}
                 <br />
+                <button className="btn btn-outline-danger" onClick={()=>{DeleteHandler(mail.id);handleButtonClose()}}
+                style={{ position: "fixed", bottom: "20px", right: "20px" }}>Delete</button>
               </li>
             ))}
           </ul>
-        </div>
+          <button className="btn btn-outline-info" onClick={handleButtonClose}
+          style={{ position: "fixed", bottom: "20px", left: "20px" }}>Hide mail</button>
+        </div>}
       </div>
     </div>
   );

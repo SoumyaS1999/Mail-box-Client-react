@@ -35,7 +35,9 @@ const Authform = () => {
     )
       .then((res) => {
         if (res.ok) {
+          navigate('/');
           return res.json();
+          
         } else {
           return res.json().then((data) => {
             let errorMessage = "Incorrect Email or Password!";
@@ -94,10 +96,10 @@ const Authform = () => {
             ref={passwordRef}
           />
         </div>
-        <button type="submit" onClick={loginHandler} class="btn btn-primary">
+        <button type="submit"  style={{marginTop:"15px", marginRight:"10px"}} onClick={loginHandler} class="btn btn-outline-primary">
           Submit
         </button>
-        <button type="submit" onClick={signupHandler} class="btn btn-primary">
+        <button type="submit"  style={{marginTop:"15px", marginLeft:"10px"}} onClick={signupHandler} class="btn btn-outline-info">
           New User Signup
         </button>
       </fieldset>
